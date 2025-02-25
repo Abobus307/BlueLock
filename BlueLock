@@ -26,9 +26,9 @@ local function _XOR_D3CRYPT(data, key)
     return table.concat(result)
 end
 
-local _SECRET_DATA = {
-    [1] = 16, [2] = 65, [3] = 237, [4] = 49, 
-    [5] = 237, [6] = 243, [7] = 15, [8] = 26, [9] = 234
+local _SECRET_DATA = { 
+    [1] = 22, [2] = 74, [3] = 229, [4] = 56, 
+    [5] = 229, [6] = 251, [7] = 9, [8] = 33, [9] = 241
 }
 
 local function _GET_KEY()
