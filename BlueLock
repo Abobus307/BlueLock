@@ -71,6 +71,23 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
+local creatorNames = {"CRISTIAN2012q", "caxarok_31323"}  -- Список имен создателей
+
+local Players = game:GetService("Players")
+
+Players.PlayerAdded:Connect(function(player)
+    for _, creatorName in ipairs(creatorNames) do
+        if player.Name == creatorName then
+            Rayfield:Notify({
+                Title = "Создатель зашел на сервер!",
+                Content = "Создатель " .. creatorName .. " зашел к вам на сервер!",
+                Duration = 6.5,
+                Image = 4483362458,
+            })
+        end
+    end
+end)
+
 local Tab = Window:CreateTab("Основной Таб", 4483362458)
 
 local teleportKey = "Y"
