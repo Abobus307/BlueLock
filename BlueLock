@@ -1,0 +1,72 @@
+print("Script Working")
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Блю лок скрипт",
+   Icon = 0,
+   LoadingTitle = "Загружается...",
+   LoadingSubtitle = "by Вася2",
+   Theme = "Default",
+   DisableRayfieldPrompts = true,
+   DisableBuildWarnings = true, 
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil,
+      FileName = "Big Hub"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = false
+   },
+   KeySystem = true,
+   KeySettings = {
+      Title = "Ключ Система",
+      Subtitle = "Ключ",
+      Note = "Нельзя!!",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Вася2"}
+   }
+})
+
+local Tab = Window:CreateTab("Телепортация", 4483362458)
+
+local Input = Tab:CreateInput({
+   Name = "Кнопка Телепортации",
+   CurrentValue = "Y",
+   PlaceholderText = "Введите букву (Англ.)",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Text)
+   end,
+})
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        if input.KeyCode == Enum.KeyCode[string.upper(Input.CurrentValue)] then
+            local football = workspace:FindFirstChild("Football")
+            if football and player.Character then
+                local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+                if humanoidRootPart then
+                    humanoidRootPart.CFrame = football.CFrame * CFrame.new(0, 3, 0)
+                end
+            end
+        end
+    end
+end)
+
+if not workspace:FindFirstChild("Football") then
+    local ball = Instance.new("Part")
+    ball.Name = "Football"
+    ball.Size = Vector3.new(3, 3, 3)
+    ball.Position = Vector3.new(0, 5, 0)
+    ball.Anchored = true
+    ball.Parent = workspace
+end
