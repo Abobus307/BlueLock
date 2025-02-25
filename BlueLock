@@ -71,7 +71,7 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local creatorNames = {"CRISTIAN2012q", "caxarok_31323"}  -- Список имен создателей
+local creatorNames = {"CRISTIAN2012q", "caxarok_31323"}
 
 local Players = game:GetService("Players")
 
