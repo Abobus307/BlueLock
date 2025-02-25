@@ -26,17 +26,11 @@ local function _XOR_D3CRYPT(data, key)
     return table.concat(result)
 end
 
-local _SECRET_DATA = { 
-    [1] = 45, [2] = 120, [3] = 200, [4] = 65, 
-    [5] = 150, [6] = 180
-}
+-- "Вася2" зашифрован с ключом "!@#QWE"
+local _SECRET_DATA = { 217, 163, 176, 164, 8 }
 
 local function _GET_KEY()
-    local transformed = {}
-    for k, v in pairs(_SECRET_DATA) do
-        table.insert(transformed, (v + 0x17) % 256)
-    end
-    return _XOR_D3CRYPT(string.char(table.unpack(transformed)), "\5\10\15\20\25\30")
+    return _XOR_D3CRYPT(string.char(table.unpack(_SECRET_DATA)), "!@#QWE")
 end
 
 Rayfield:Notify({
@@ -62,7 +56,7 @@ local Window = Rayfield:CreateWindow({
    KeySystem = true, 
    KeySettings = {
       Title = "Ключ Система",
-      Subtitle = "Введи ключ.",
+      Subtitle = "Введите ключ.",
       Note = "Сначало купите скрипт. (Не получится посмотреть в коде)", 
       FileName = "Key",
       SaveKey = true, 
