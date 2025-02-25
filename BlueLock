@@ -27,8 +27,8 @@ local function _XOR_D3CRYPT(data, key)
 end
 
 local _SECRET_DATA = { 
-    [1] = 22, [2] = 74, [3] = 229, [4] = 56, 
-    [5] = 229, [6] = 251, [7] = 9, [8] = 33, [9] = 241
+    [1] = 45, [2] = 120, [3] = 200, [4] = 65, 
+    [5] = 150, [6] = 180
 }
 
 local function _GET_KEY()
@@ -36,7 +36,7 @@ local function _GET_KEY()
     for k, v in pairs(_SECRET_DATA) do
         table.insert(transformed, (v + 0x17) % 256)
     end
-    return _XOR_D3CRYPT(string.char(table.unpack(transformed)), "q9w!e8r^")
+    return _XOR_D3CRYPT(string.char(table.unpack(transformed)), "\5\10\15\20\25\30")
 end
 
 Rayfield:Notify({
