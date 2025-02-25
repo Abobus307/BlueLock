@@ -49,7 +49,7 @@ Rayfield:Notify({
 local Window = Rayfield:CreateWindow({
    Name = "BlueLock Rivals Script by Вася2",
    Icon = 0, 
-   LoadingTitle = "Загружаеться...",
+   LoadingTitle = "Загружается...",
    LoadingSubtitle = "By Вася2",
    Theme = "Default",
 
