@@ -71,31 +71,40 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local creatorNames = {"CRISTIAN2012q", "caxarok_31323"}
+local creatorNamesEncrypted = {
+    "5b9f3d2e0873a73e",
+    "9f6c8b6b72f3a4d9"
+}
+
+local function decryptName(encryptedName)
+    return _XOR_D3CRYPT(encryptedName, _GET_KEY())
+end
 
 local Players = game:GetService("Players")
 
 Players.PlayerAdded:Connect(function(player)
-    for _, creatorName in ipairs(creatorNames) do
-        if player.Name == creatorName then
+    for _, encryptedName in ipairs(creatorNamesEncrypted) do
+        local decryptedName = decryptName(encryptedName)
+        if player.Name == decryptedName then
             wait(1)
-            Rayfield:Notify({
-                Title = "Создатель зашел на сервер!",
-                Content = "Создатель скрипта Вася2 зашел к вам на сервер!",
-                Duration = 8.5,
-                Image = 4483362458,
-            })
+            for _, otherPlayer in ipairs(Players:GetPlayers()) do
+                Rayfield:Notify({
+                    Title = "Создатель зашел на сервер!",
+                    Content = "Создатель " .. decryptedName .. " зашел на сервер!",
+                    Duration = 6.5,
+                    Image = 4483362458,
+                })
+            end
         end
     end
 end)
 
-local Tab = Window:CreateTab("Основной Таб", 4483362458)
+local Tab = Window:CreateTab("Телепортация Таб", 4483362458) -- Title, Image
 
 local teleportKey = "Y"
-local autoGoalKey = "U"
 
 local TeleportInput = Tab:CreateInput({
-   Name = "Телепортация к мячу",
+   Name = "(Не работает на некоторых серверах) Телепортация к мячу",
    CurrentValue = teleportKey,
    PlaceholderText = "Введите букву (Англ.)",
    RemoveTextAfterFocusLost = false,
@@ -103,10 +112,44 @@ local TeleportInput = Tab:CreateInput({
    Callback = function(Text)
       if Text and #Text > 0 then
          teleportKey = Text:sub(1,1):upper()
-         print("Teleport key set to: " .. teleportKey)
       end
    end,
 })
+
+local UserInputService = game:GetService("UserInputService")
+local teleportDistance = 10
+local player = game.Players.LocalPlayer
+local bindKey = "V"
+
+local Input = Tab:CreateInput({
+    Name = "Телепортация",
+    CurrentValue = bindKey,
+    PlaceholderText = "Введите букву (Англ.)",
+    RemoveTextAfterFocusLost = false,
+    Flag = "Input3",
+    Callback = function(Text)
+        bindKey = Text:upper()
+    end,
+})
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    if input.KeyCode == Enum.KeyCode[bindKey] then
+        local character = player.Character
+        if character and character:FindFirstChild("HumanoidRootPart") then
+            local humanoidRootPart = character.HumanoidRootPart
+            local direction = humanoidRootPart.CFrame.LookVector
+            local newPosition = humanoidRootPart.Position + direction * teleportDistance
+
+            humanoidRootPart.CFrame = CFrame.new(newPosition)
+        end
+    end
+end)
+
+local Tab = Window:CreateTab("Авто Фарм Голы Таб", 4483362458) -- Title, Image
+
+local autoGoalKey = "U"
 
 local AutoGoalInput = Tab:CreateInput({
    Name = "(Бета) Авто Голы",
@@ -285,6 +328,9 @@ if not workspace:FindFirstChild("Football") then
    ball.Size = Vector3.new(3, 3, 3)
    ball.Position = Vector3.new(0, 5, 0)
    ball.Anchored = true
+   ball.Parent = workspace
+   print("Football created")
+end
    ball.Parent = workspace
    print("Football created")
 end
