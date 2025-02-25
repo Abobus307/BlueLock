@@ -81,7 +81,7 @@ Players.PlayerAdded:Connect(function(player)
             wait(1)
             Rayfield:Notify({
                 Title = "Создатель зашел на сервер!",
-                Content = "Создатель скрипта зашел к вам на сервер!",
+                Content = "Создатель скрипта Вася2 зашел к вам на сервер!",
                 Duration = 8.5,
                 Image = 4483362458,
             })
