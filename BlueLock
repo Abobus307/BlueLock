@@ -3,17 +3,17 @@ print("Script Working")
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Блю лок скрипт",
+   Name = "BlueLock Rivals Script",
    Icon = 0,
    LoadingTitle = "Загружается...",
-   LoadingSubtitle = "by Вася2",
+   LoadingSubtitle = "By Вася2",
    Theme = "Default",
    DisableRayfieldPrompts = true,
-   DisableBuildWarnings = true, 
+   DisableBuildWarnings = true,
    ConfigurationSaving = {
       Enabled = false,
       FolderName = nil,
-      FileName = "Big Hub"
+      FileName = "Vasi2 Hub"
    },
    Discord = {
       Enabled = false,
@@ -24,7 +24,7 @@ local Window = Rayfield:CreateWindow({
    KeySettings = {
       Title = "Ключ Система",
       Subtitle = "Ключ",
-      Note = "Нельзя!!",
+      Note = "Сначало купите скрипт.",
       FileName = "Key",
       SaveKey = true,
       GrabKeyFromSite = false,
@@ -32,15 +32,36 @@ local Window = Rayfield:CreateWindow({
    }
 })
 
-local Tab = Window:CreateTab("Телепортация", 4483362458)
+local Tab = Window:CreateTab("Основной Таб", 4483362458)
 
-local Input = Tab:CreateInput({
-   Name = "Кнопка Телепортации",
-   CurrentValue = "Y",
+local teleportKey = "Y"
+local autoGoalKey = "U"
+
+local TeleportInput = Tab:CreateInput({
+   Name = "Телепортация к мячу",
+   CurrentValue = teleportKey,
    PlaceholderText = "Введите букву (Англ.)",
    RemoveTextAfterFocusLost = false,
    Flag = "Input1",
    Callback = function(Text)
+      if Text and #Text > 0 then
+         teleportKey = Text:sub(1,1):upper()
+         print("Teleport key set to: " .. teleportKey)
+      end
+   end,
+})
+
+local AutoGoalInput = Tab:CreateInput({
+   Name = "(Бета) Авто Голы",
+   CurrentValue = autoGoalKey,
+   PlaceholderText = "Введите букву (Англ.)",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input2",
+   Callback = function(Text)
+      if Text and #Text > 0 then
+         autoGoalKey = Text:sub(1,1):upper()
+         print("AutoGoal key set to: " .. autoGoalKey)
+      end
    end,
 })
 
@@ -48,25 +69,165 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
+local playerTeam = nil
+
+local function determineTeam(character)
+   local hrp = character:WaitForChild("HumanoidRootPart", 5)
+   if not hrp then
+      return nil, nil
+   end
+   local myPos = hrp.Position
+   local teamPositions = workspace:FindFirstChild("TeamPositions")
+   if not teamPositions then
+      print("TeamPositions folder not found")
+      return nil, nil
+   end
+   local homeFolder = teamPositions:FindFirstChild("Home")
+   local awayFolder = teamPositions:FindFirstChild("Away")
+   if not homeFolder or not awayFolder then
+      print("Home or Away folder not found inside TeamPositions")
+      return nil, nil
+   end
+
+   local bestDist = math.huge
+   local bestTeam = nil
+   local bestSpawnName = nil
+
+   for _, part in ipairs(homeFolder:GetChildren()) do
+       if part:IsA("BasePart") then
+           local dist = (part.Position - myPos).Magnitude
+           if dist < bestDist then
+               bestDist = dist
+               bestTeam = "Home"
+               bestSpawnName = part.Name
+           end
+       end
+   end
+
+   for _, part in ipairs(awayFolder:GetChildren()) do
+       if part:IsA("BasePart") then
+           local dist = (part.Position - myPos).Magnitude
+           if dist < bestDist then
+               bestDist = dist
+               bestTeam = "Away"
+               bestSpawnName = part.Name
+           end
+       end
+   end
+
+   if not bestTeam then
+      print("No valid spawn parts found. Assigning default team: Home")
+      return "Home", "DefaultSpawn"
+   end
+
+   print("Best distance: " .. bestDist .. ", team: " .. bestTeam)
+   return bestTeam, bestSpawnName
+end
+
+if player.Character then
+   local team, spawnName = determineTeam(player.Character)
+   if team then
+       playerTeam = team
+       print("Player spawned on: " .. spawnName .. " (Team: " .. team .. ")")
+   else
+       print("Could not determine player's team, assigning default: Home")
+       playerTeam = "Home"
+   end
+end
+
+player.CharacterAdded:Connect(function(character)
+   wait(0.5)
+   local team, spawnName = determineTeam(character)
+   if team then
+       playerTeam = team
+       print("Player spawned on: " .. spawnName .. " (Team: " .. team .. ")")
+   else
+       print("Could not determine player's team, assigning default: Home")
+       playerTeam = "Home"
+   end
+end)
+
+local function getGoalCFrame(goal)
+   if goal:IsA("BasePart") then
+      return goal.CFrame
+   elseif goal:IsA("Model") then
+      if goal.PrimaryPart then
+         return goal.PrimaryPart.CFrame
+      else
+         local part = goal:FindFirstChildWhichIsA("BasePart")
+         if part then
+            return part.CFrame
+         end
+      end
+   end
+   return nil
+end
+
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if not gameProcessed then
-        if input.KeyCode == Enum.KeyCode[string.upper(Input.CurrentValue)] then
-            local football = workspace:FindFirstChild("Football")
-            if football and player.Character then
-                local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
-                if humanoidRootPart then
-                    humanoidRootPart.CFrame = football.CFrame * CFrame.new(0, 3, 0)
-                end
+   if not gameProcessed then
+      local pressedKey = input.KeyCode.Name
+      
+      if pressedKey == teleportKey then
+         local football = workspace:FindFirstChild("Football")
+         if football and player.Character then
+            local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+               hrp.CFrame = football.CFrame * CFrame.new(0, 3, 0)
+               print("Teleported to football")
+            else
+               print("HumanoidRootPart not found")
             end
-        end
-    end
+         else
+            print("Football or Character not found")
+         end
+      end
+
+      if pressedKey == autoGoalKey then
+         local football = workspace:FindFirstChild("Football")
+         if not football then
+            print("Football not found")
+            return
+         end
+         if not playerTeam then
+            print("Player team not determined")
+            return
+         end
+
+         local targetGoal = nil
+         if playerTeam == "Home" then
+            targetGoal = workspace.Goals and workspace.Goals:FindFirstChild("Goal2")
+         elseif playerTeam == "Away" then
+            targetGoal = workspace.Goals and workspace.Goals:FindFirstChild("Goal")
+         end
+
+         if targetGoal then
+            local goalCFrame = getGoalCFrame(targetGoal)
+            if goalCFrame then
+               football.CFrame = goalCFrame * CFrame.new(0, 3, 0)
+               print("Football moved to opponent's goal: " .. targetGoal.Name)
+               local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+               if hrp then
+                  hrp.CFrame = football.CFrame * CFrame.new(0, 0, -5)
+                  print("Player teleported to hit the ball")
+               else
+                  print("HumanoidRootPart not found for player teleportation")
+               end
+            else
+               print("Could not get valid CFrame for goal: " .. targetGoal.Name)
+            end
+         else
+            print("Opponent goal not found")
+         end
+      end
+   end
 end)
 
 if not workspace:FindFirstChild("Football") then
-    local ball = Instance.new("Part")
-    ball.Name = "Football"
-    ball.Size = Vector3.new(3, 3, 3)
-    ball.Position = Vector3.new(0, 5, 0)
-    ball.Anchored = true
-    ball.Parent = workspace
+   local ball = Instance.new("Part")
+   ball.Name = "Football"
+   ball.Size = Vector3.new(3, 3, 3)
+   ball.Position = Vector3.new(0, 5, 0)
+   ball.Anchored = true
+   ball.Parent = workspace
+   print("Football created")
 end
