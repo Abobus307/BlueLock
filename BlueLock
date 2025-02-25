@@ -78,10 +78,11 @@ local Players = game:GetService("Players")
 Players.PlayerAdded:Connect(function(player)
     for _, creatorName in ipairs(creatorNames) do
         if player.Name == creatorName then
-                Rayfield:Notify({
+            wait(1)
+            Rayfield:Notify({
                 Title = "Создатель зашел на сервер!",
-                Content = "Создатель " .. creatorName .. " зашел к вам на сервер!",
-                Duration = 6.5,
+                Content = "Создатель скрипта зашел к вам на сервер!",
+                Duration = 8.5,
                 Image = 4483362458,
             })
         end
