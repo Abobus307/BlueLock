@@ -26,16 +26,22 @@ local function _XOR_D3CRYPT(data, key)
     return table.concat(result)
 end
 
--- "Вася2" зашифрован с ключом "!@#QWE"
-local _SECRET_DATA = { 217, 163, 176, 164, 8 }
+local _SECRET_DATA = {
+    [1] = 16, [2] = 65, [3] = 237, [4] = 49, 
+    [5] = 237, [6] = 243, [7] = 15, [8] = 26, [9] = 234
+}
 
 local function _GET_KEY()
-    return _XOR_D3CRYPT(string.char(table.unpack(_SECRET_DATA)), "!@#QWE")
+    local transformed = {}
+    for k, v in pairs(_SECRET_DATA) do
+        table.insert(transformed, (v + 0x17) % 256)
+    end
+    return _XOR_D3CRYPT(string.char(table.unpack(transformed)), "q9w!e8r^")
 end
 
 Rayfield:Notify({
-   Title = "Привет!",
-   Content = "Наслаждайся скриптом :)",
+   Title = "Hello!",
+   Content = "Enjoy the script :)",
    Duration = 6.5,
    Image = 4483362458,
 })
@@ -43,7 +49,7 @@ Rayfield:Notify({
 local Window = Rayfield:CreateWindow({
    Name = "BlueLock Rivals Script by Вася2",
    Icon = 0, 
-   LoadingTitle = "Загружается...",
+   LoadingTitle = "Загружаеться...",
    LoadingSubtitle = "By Вася2",
    Theme = "Default",
 
@@ -56,7 +62,7 @@ local Window = Rayfield:CreateWindow({
    KeySystem = true, 
    KeySettings = {
       Title = "Ключ Система",
-      Subtitle = "Введите ключ.",
+      Subtitle = "Введите ключ",
       Note = "Сначало купите скрипт. (Не получится посмотреть в коде)", 
       FileName = "Key",
       SaveKey = true, 
