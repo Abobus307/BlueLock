@@ -119,7 +119,7 @@ local TeleportInput = Tab:CreateInput({
 local UserInputService = game:GetService("UserInputService")
 local teleportDistance = 10
 local player = game.Players.LocalPlayer
-local bindKey = "X"
+local bindKey = "V"
 
 local Input = Tab:CreateInput({
     Name = "Телепортация",
