@@ -144,12 +144,12 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 end)
 
 local UserInputService = game:GetService("UserInputService")
-local teleportDistance = 10
+local teleportDistance = 20
 local player = game.Players.LocalPlayer
-local bindKey = "M"
+local bindKey = "T"
 
 local Input = Tab:CreateInput({
-    Name = "Телепортация (20 метров)",
+    Name = "Телепортация",
     CurrentValue = bindKey,
     PlaceholderText = "Введите букву (Англ.)",
     RemoveTextAfterFocusLost = false,
@@ -166,10 +166,11 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         local character = player.Character
         if character and character:FindFirstChild("HumanoidRootPart") then
             local humanoidRootPart = character.HumanoidRootPart
-            local direction = humanoidRootPart.CFrame.LookVector
-            local newPosition = humanoidRootPart.Position + direction * teleportDistance
+            local lookDirection = humanoidRootPart.CFrame.LookVector -- Четкое направление взгляда
+            local newPosition = humanoidRootPart.Position + (lookDirection * teleportDistance)
 
-            humanoidRootPart.CFrame = CFrame.new(newPosition)
+            humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + lookDirection) 
+            print("Телепортация выполнена на 20 метров вперед!")
         end
     end
 end)
