@@ -72,25 +72,40 @@ local Window = Rayfield:CreateWindow({
 })
 
 local creatorNamesEncrypted = {
-    "5b9f3d2e0873a73e",
-    "9f6c8b6b72f3a4d9"
+    "G|2Q~3pR1m",
+    "Ivrf6~B6"
 }
 
-local function decryptName(encryptedName)
-    return _XOR_D3CRYPT(encryptedName, _GET_KEY())
+local function decrypt(text, shift)
+    local decrypted = {}
+    for i = 1, #text do
+        local char = text:sub(i, i)
+        if char:match("%a") then
+            local base = char:match("[A-Z]") and 65 or 97
+            local newChar = string.char(((string.byte(char) - base - shift + 26) % 26) + base)
+            table.insert(decrypted, newChar)
+        else
+            table.insert(decrypted, char)
+        end
+    end
+    return table.concat(decrypted)
 end
+
+local shift = 5
 
 local Players = game:GetService("Players")
 
 Players.PlayerAdded:Connect(function(player)
     for _, encryptedName in ipairs(creatorNamesEncrypted) do
-        local decryptedName = decryptName(encryptedName)
+        local decryptedName = decrypt(encryptedName, shift)
+        
         if player.Name == decryptedName then
             wait(1)
+
             for _, otherPlayer in ipairs(Players:GetPlayers()) do
                 Rayfield:Notify({
-                    Title = "Создатель зашел на сервер!",
-                    Content = "Создатель " .. decryptedName .. " зашел на сервер!",
+                    Title = "Создатель Вася2 зашел на сервер!",
+                    Content = "Создатель скрипта Вася2 зашел на сервер!",
                     Duration = 6.5,
                     Image = 4483362458,
                 })
