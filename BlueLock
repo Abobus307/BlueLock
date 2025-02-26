@@ -184,8 +184,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
             local lookDirection = humanoidRootPart.CFrame.LookVector -- Четкое направление взгляда
             local newPosition = humanoidRootPart.Position + (lookDirection * teleportDistance)
 
-            humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + lookDirection) 
-            print("Телепортация выполнена на 20 метров вперед!")
+            humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + lookDirection)
         end
     end
 end)
