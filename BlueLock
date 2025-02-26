@@ -104,7 +104,7 @@ local Tab = Window:CreateTab("Телепортация Таб", 4483362458) -- T
 local teleportKey = "Y"
 
 local TeleportInput = Tab:CreateInput({
-   Name = "(Не работает на некоторых серверах) Телепортация к мячу",
+   Name = "Телепортация к мячу",
    CurrentValue = teleportKey,
    PlaceholderText = "Введите букву (Англ.)",
    RemoveTextAfterFocusLost = false,
@@ -119,7 +119,7 @@ local TeleportInput = Tab:CreateInput({
 local UserInputService = game:GetService("UserInputService")
 local teleportDistance = 10
 local player = game.Players.LocalPlayer
-local bindKey = "V"
+local bindKey = "X"
 
 local Input = Tab:CreateInput({
     Name = "Телепортация",
@@ -328,9 +328,6 @@ if not workspace:FindFirstChild("Football") then
    ball.Size = Vector3.new(3, 3, 3)
    ball.Position = Vector3.new(0, 5, 0)
    ball.Anchored = true
-   ball.Parent = workspace
-   print("Football created")
-end
    ball.Parent = workspace
    print("Football created")
 end
