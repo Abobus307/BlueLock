@@ -149,7 +149,7 @@ local player = game.Players.LocalPlayer
 local bindKey = "M"
 
 local Input = Tab:CreateInput({
-    Name = "Телепортация",
+    Name = "Телепортация (20 метров)",
     CurrentValue = bindKey,
     PlaceholderText = "Введите букву (Англ.)",
     RemoveTextAfterFocusLost = false,
