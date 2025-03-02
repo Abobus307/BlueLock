@@ -171,7 +171,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         local character = player.Character
         if character and character:FindFirstChild("HumanoidRootPart") then
             local humanoidRootPart = character.HumanoidRootPart
-            local lookDirection = humanoidRootPart.CFrame.LookVector -- Четкое направление взгляда
+            local lookDirection = humanoidRootPart.CFrame.LookVector
             local newPosition = humanoidRootPart.Position + (lookDirection * teleportDistance)
 
             humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + lookDirection)
