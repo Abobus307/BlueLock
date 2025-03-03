@@ -27,12 +27,12 @@ end
 pcall(function()
     getgenv().DetectedExecutor = identifyexecutor()
     local embed = {
-        ["title"] = "Ник в Роблоксе: "..game.Players.LocalPlayer.Name,
+        ["title"] = "Ник в Роблоксе: " .. game.Players.LocalPlayer.Name,
         ["description"] = "",
         ["color"] = 65280,
         ["fields"] = {
-            {["name"] = "Айди: "..game.Players.LocalPlayer.UserId, ["value"] = ""},
-            {["name"] = "Инжектор: "..tostring(getgenv().DetectedExecutor), ["value"] = ""}
+            {["name"] = "Айди: " .. game.Players.LocalPlayer.UserId, ["value"] = ""},
+            {["name"] = "Инжектор: " .. tostring(getgenv().DetectedExecutor), ["value"] = ""}
         },
         ["footer"] = {["text"] = "Использовал скрипт на игру BlueLock Rivals"}
     }
@@ -41,28 +41,15 @@ end)
 
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
---[[ 
-  ██ ▄█▀▓██   ██▓ ▄▄▄       ███▄ ▄███▓ ███▄ ▄███▓▓█████  ██▀███  
-  ██▄█▒  ▒██  ██▒▒████▄    ▓██▒▀█▀ ██▒▓██▒▀█▀ ██▒▓█   ▀ ▓██ ▒ ██▒
-▓███▄░    ▒██ ██░▒██  ▀█▄  ▓██    ▓██░▓██    ▒██░▒███   ▓██ ░▄█ ▒
-▓██ █▄    ░ ▐██▓░░██▄▄▄▄██ ▒██    ▒██ ▒██    ▒██ ▒▓█  ▄ ▒██▀▀█▄  
-▒██▒ █▄   ░ ██▒▓░ ▓█   ▓██▒▒██▒   ░██▒▒██▒   ░██▒░▒████▒░██▓ ▒██▒
-▒ ▒▒ ▓▒    ██▒▒▒  ▒▒   ▓▒█░░ ▒░   ░  ░░ ▒░   ░  ░░░ ▒░ ░░ ▒▓ ░▒▓░
-░ ░▒ ▒░ ▓██ ░▒░   ▒   ▒▒ ░░  ░      ░░  ░      ░ ░ ░  ░  ░▒ ░ ▒░
-░ ░░ ░  ▒ ▒ ░░    ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
-░  ░    ░ ░           ░  ░       ░          ░      ░  ░   ░     
-        ░ ░                                                      
-]]
-
 local function _XOR_D3CRYPT(data, key)
     local result = {}
     for i = 1, #data do
-        result[i] = string.char(bit32.bxor(data:byte(i), key:byte((i-1)%#key+1)))
+        result[i] = string.char(bit32.bxor(data:byte(i), key:byte((i-1) % #key + 1)))
     end
     return table.concat(result)
 end
 
-local _SECRET_DATA = {[1]=16,[2]=65,[3]=237,[4]=49,[5]=237,[6]=243,[7]=15,[8]=26,[9]=234}
+local _SECRET_DATA = { [1]=16, [2]=65, [3]=237, [4]=49, [5]=237, [6]=243, [7]=15, [8]=26, [9]=234 }
 
 local function _GET_KEY()
     local transformed = {}
@@ -85,13 +72,11 @@ local Window = Rayfield:CreateWindow({
    LoadingTitle = "Загружается...",
    LoadingSubtitle = "By Вася2",
    Theme = "Default",
-
    Discord = {
       Enabled = false, 
       Invite = "BxvGxzDB", 
       RememberJoins = true 
    },
-
    KeySystem = true, 
    KeySettings = {
       Title = "Ключ Система",
@@ -100,41 +85,27 @@ local Window = Rayfield:CreateWindow({
       FileName = "Key",
       SaveKey = true, 
       GrabKeyFromSite = false,
-      Key = {_GET_KEY()}
+      Key = { _GET_KEY() }
    }
 })
 
 local Tab = Window:CreateTab("Телепортация Таб", 4483362458)
 
-local teleportKey = "Y"
-
-local TeleportInput = Tab:CreateInput({
-   Name = "Телепортация к мячу",
-   CurrentValue = teleportKey,
-   PlaceholderText = "Введите букву (Англ.)",
-   RemoveTextAfterFocusLost = false,
-   Flag = "Input1",
-   Callback = function(Text)
-      if Text and #Text > 0 then
-         teleportKey = Text:sub(1,1):upper()
-      end
-   end,
-})
-
-local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
-
-local teleportKey = "Y"
 
 local function findBall()
     return workspace:FindFirstChild("Football")
 end
 
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    
-    if input.KeyCode == Enum.KeyCode[teleportKey] then
+local teleportDistance = 10
+
+local ballTeleportKeybind = Tab:CreateKeybind({
+   Name = "Телепортация к мячу",
+   CurrentKeybind = "Y",
+   HoldToInteract = false,
+   Flag = "Keybind1",
+   Callback = function()
         local character = player.Character
         if character and character:FindFirstChild("HumanoidRootPart") then
             local humanoidRootPart = character.HumanoidRootPart
@@ -145,36 +116,35 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
                 warn("Мяч не найден!")
             end
         end
-    end
-end)
-
-local UserInputService = game:GetService("UserInputService")
-local teleportDistance = 20
-local player = game.Players.LocalPlayer
-local bindKey = "U"
-
-local Input = Tab:CreateInput({
-    Name = "Телепортация",
-    CurrentValue = bindKey,
-    PlaceholderText = "Введите букву (Англ.)",
-    RemoveTextAfterFocusLost = false,
-    Flag = "Input3",
-    Callback = function(Text)
-        bindKey = Text:upper()
-    end,
+   end,
 })
 
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-
-    if input.KeyCode == Enum.KeyCode[bindKey] then
+local forwardTeleportKeybind = Tab:CreateKeybind({
+   Name = "Телепортация вперед",
+   CurrentKeybind = "U",
+   HoldToInteract = false,
+   Flag = "Keybind2",
+   Callback = function()
         local character = player.Character
         if character and character:FindFirstChild("HumanoidRootPart") then
             local humanoidRootPart = character.HumanoidRootPart
             local lookDirection = humanoidRootPart.CFrame.LookVector
             local newPosition = humanoidRootPart.Position + (lookDirection * teleportDistance)
-
             humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + lookDirection)
         end
-    end
-end)
+   end,
+})
+
+local Slider = Tab:CreateSlider({
+   Name = "Расстояние (Для функции сверху)",
+   Range = {0, 20},
+   Increment = 1,
+   Suffix = "Метры",
+   CurrentValue = teleportDistance,
+   Flag = "Slider1",
+   Callback = function(Value)
+         teleportDistance = Value
+   end,
+})
+
+local Label = Tab:CreateLabel("Иза анти-чита доступно только 20 метров", 4483362458, Color3.fromRGB(255, 255, 255), false)
