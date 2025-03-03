@@ -136,7 +136,7 @@ local forwardTeleportKeybind = Tab:CreateKeybind({
 })
 
 local Slider = Tab:CreateSlider({
-   Name = "Расстояние (Для функции сверху)",
+   Name = "Расстояние",
    Range = {0, 20},
    Increment = 1,
    Suffix = "Метры",
@@ -147,4 +147,4 @@ local Slider = Tab:CreateSlider({
    end,
 })
 
-local Label = Tab:CreateLabel("Иза анти-чита доступно только 20 метров", 4483362458, Color3.fromRGB(255, 255, 255), false)
+local Label = Tab:CreateLabel("Иза анти-чита доступно только 20 метров (Для функции сверху)", 4483362458, Color3.fromRGB(255, 255, 255), false)
