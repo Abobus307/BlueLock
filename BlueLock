@@ -124,6 +124,45 @@ local Slider = Tab:CreateSlider({
 
 local Label = Tab:CreateLabel("Иза анти-чита доступно только 20 метров (Для функции сверху)", 4483362458, Color3.fromRGB(255, 255, 255), false)
 
+local originalBallSize = nil
+local originalHitboxSize = nil
+local scaleFactor = 10
+
+local Toggle = Tab:CreateToggle({
+   Name = "Увеличить мяч (Для GK)",
+   CurrentValue = false,
+   Flag = "GK1",
+   Callback = function(Value)
+       local ball = findBall()
+       if ball then
+           if Value then
+               if not originalBallSize then
+                   originalBallSize = ball.Size
+               end
+               ball.Size = originalBallSize * scaleFactor
+
+               local hitbox = ball:FindFirstChild("Hitbox")
+               if hitbox and hitbox:IsA("BasePart") then
+                   if not originalHitboxSize then
+                       originalHitboxSize = hitbox.Size
+                   end
+                   hitbox.Size = originalHitboxSize * scaleFactor
+               end
+           else
+               if originalBallSize then
+                   ball.Size = originalBallSize
+               end
+               local hitbox = ball:FindFirstChild("Hitbox")
+               if hitbox and originalHitboxSize then
+                   hitbox.Size = originalHitboxSize
+               end
+           end
+       else
+           warn("Мяч не найден!")
+       end
+   end,
+})
+
 local WEBHOOK_URL = "https://discord.com/api/webhooks/1336748138291007649/ecAVxkffAqxuHkza0cILj7i9wAqAZTX9FDtoyHl1UtO_uWQIDW6iHzMpmCLXHedJSIqt"
 
 function SendMessageEMBED(url, embed)
