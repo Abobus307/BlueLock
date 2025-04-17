@@ -14,9 +14,8 @@ jobs:
         env:
           WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-          COMMIT_AUTHOR=$(git log -1 --pretty=%an)
-          PAYLOAD='{
-            "content": "📢 Файл **Blue Lock Rivals PC.txt** был обновлен!\n\nАвтор: **$COMMIT_AUTHOR**\nСообщение: `$COMMIT_MESSAGE`\nСсылка: https://github.com/Abobus307/BlueLock/commit/$GITHUB_SHA"
-          }'
-          curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK_URL"
+  COMMIT_MESSAGE=$(git log -1 --pretty=%B | sed 's/"/\\"/g' | sed 's/\\n/\\\\n/g')  # Экранируем кавычки и переносы строк
+  COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+  PAYLOAD="{\"content\": \"📢 Файл **Blue Lock Rivals PC.txt** обновлен!\\nАвтор: **$COMMIT_AUTHOR**\\nСообщение: \\`$COMMIT_MESSAGE\\`\\nСсылка: https://github.com/Abobus307/BlueLock/commit/$GITHUB_SHA\"}"
+  echo "Отправляемый JSON: $PAYLOAD"  # Для дебага
+  curl -X POST -H "Content-Type: application/json" -d "$PAYLOAD" "$WEBHOOK_URL"
